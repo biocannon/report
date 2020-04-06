@@ -35,6 +35,8 @@ Datum,Broj,Zemlja
 1/4/2020,1753,Italija
 2/4/2020,1832,Italija
 3/4/2020,1909,Italija
+5/4/2020,1985,Italija
+6/4/2020,2065,Italija
 28/02/2020,1,Svajcarska
 29/02/2020,1,Svajcarska
 1/3/2020,2,Svajcarska
@@ -71,6 +73,8 @@ Datum,Broj,Zemlja
 1/4/2020,1885,Svajcarska
 2/4/2020,1998,Svajcarska
 3/4/2020,2205,Svajcarska
+5/4/2020,2306,Svajcarska
+6/4/2020,2398,Svajcarska
 28/02/2020,1,Nemacka
 29/02/2020,1,Nemacka
 1/3/2020,1,Nemacka
@@ -107,6 +111,8 @@ Datum,Broj,Zemlja
 1/4/2020,811,Nemacka
 2/4/2020,886,Nemacka
 3/4/2020,886,Nemacka
+4/4/2020,960,Nemacka
+5/4/2020,1105,Nemacka
 28/02/2020,1,Francuska
 29/02/2020,1,Francuska
 1/3/2020,1,Francuska
@@ -143,6 +149,8 @@ Datum,Broj,Zemlja
 1/4/2020,778,Francuska
 2/4/2020,850,Francuska
 3/4/2020,882,Francuska
+4/4/2020,960,Francuska
+5/4/2020,1024,Francuska
 28/02/2020,1,Spanija
 29/02/2020,1,Spanija
 1/3/2020,1,Spanija
@@ -179,6 +187,8 @@ Datum,Broj,Zemlja
 1/4/2020,2012,Spanija
 2/4/2020,2176,Spanija
 3/4/2020,2349,Spanija
+4/4/2020,2508,Spanija
+5/4/2020,2658,Spanija
 28/02/2020,0,Srbija
 29/02/2020,0,Srbija
 1/3/2020,0,Srbija
@@ -215,3 +225,5 @@ Datum,Broj,Zemlja
 1/4/2020,121,Srbija
 2/4/2020,133,Srbija
 3/4/2020,168,Srbija
+4/4/2020,185,Srbija
+5/4/2020,218,Srbija

@@ -1,9 +1,11 @@
 ---
-title: "COVID-19 analiza situacije u Srbiji"
+title: "COVID-19: analiza situacije u Srbiji"
+
 output: 
     md_document:
         variant: markdown_github
-date: "4/4/2020"
+    #html
+date: "5/4/2020"
 ---
 
 ```{r setup, include=FALSE}
@@ -11,122 +13,161 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Analiza situacije u Srbiji
-######izvori: covid19.rs
+izvori: covid19.rs
 
-Ovaj dokument predstavlja nezvaničnu analizu broja obolelih od COVID-19 na teritoriji Srbije. Cilj analize je da se predstave dnevne promene i trendovi promena brojeva obolelih, smrtnih slučajeva i broja testiranih ljudi koji su ispunjavali definiciju slučaja. Takođe, ovaj dokument ima za cilj predstavljanje promena broja zaraženih u Srbiji u svetlu promena u regionu i trenutnim žarištima pandemije u Evropi. Podaci korišćeni za preliminarnu analizu su preuzeti sa izveštaja sajta covid19.rs. Izvori ostalih podataka korišćenih za analizu su istaknuti ispod naslova analize.   
+Ovaj dokument predstavlja nezvaničnu analizu broja obolelih od COVID-19 na teritoriji Srbije. Cilj analize je da se predstave dnevne promene i trendovi promena brojeva obolelih, smrtnih slučajeva i broja testiranih ljudi koji su ispunjavali definiciju slučaja. Takođe, ovaj dokument ima za cilj predstavljanje promena broja zaraženih u Srbiji u svetlu promena u regionu i trenutnim žarištima pandemije u Evropi. Podaci korišćeni za preliminarnu analizu su preuzeti sa izveštaja sajta covid19.rs. Izvori ostalih podataka korišćenih za analizu su istaknuti ispod naslova rezultata.   
 
-#### Ukupan broj potvrdjenih slučajeva
+
 
 ```{r, echo=FALSE, message=FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(plotly)
 Srbija <- read.csv("Srbija.csv", header = T)
 Srbija$Datum <- as.Date(Srbija$Datum, format = "%m/%d/%Y")
-
-ggplot(Srbija, aes(Datum, Ukupan.broj)) +
-    geom_line(size = 1.5) +
-    theme_bw() + 
-    scale_fill_brewer(palette = "Spectral") +
-    labs(x = "Datum", y = "Ukupan broj zaraženih")
 ```
 
-####Ukupan broj potvrdjenih slučajeva (log10)
+## Ukupan broj potvrdjenih slučajeva
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE}
 
-ggplot(Srbija, aes(Datum, Ukupan.broj)) +
-    geom_line(size = 1.5) +
+ukp.log <- ggplot(Srbija, aes(Datum, Ukupan.broj)) +
+    geom_smooth() +
+    geom_point(size = 1.5, col = "red") +
     theme_bw() + 
     scale_fill_brewer(palette = "Spectral") +
     labs(x = "Datum", y = "log10(Ukupan broj zaraženih)") +
     scale_y_log10()
 
+ukp.log
 ```
 
-#### Ukupan pozitivnih broj u odnosu na dnevni rast pozitivnih slučajeva
+## Ukupan pozitivnih broj u odnosu na dnevni rast pozitivnih slučajeva
 
 ```{r, echo=FALSE, message=FALSE}
-ggplot(Srbija, aes(Ukupan.broj, Pozitivni.novi)) +
-    geom_line(size = 1.5) +
+ukp.poz <- ggplot(Srbija, aes(Ukupan.broj, Pozitivni.novi)) +
+    geom_smooth() +
+    geom_point(size = 2, col = "red") +
     theme_bw() + 
     scale_fill_brewer(palette = "Spectral") +
     labs(x = "Ukupan broj zaraženih", 
          y = "Dnevni broj novih pozitivnih slučajeva")
+
+ukp.poz
+
+
 ```
 
 
-#### Dnevna promena rasta pozitivnih slučajeva
-######crvena linija označava stopu rasta 1.1 puta
+## Dnevna promena rasta pozitivnih slučajeva
+crvena linija označava stopu rasta 1.1 puta
 
-```{r, echo=FALSE, message=FALSE}
-ggplot(Srbija, aes(Ukupan.broj, Stopa.novih.slucajeva)) +
-    geom_line(size = 1.5) +
+```{r, echo=FALSE, message=FALSE, warning= FALSE}
+stopa.rasta <- ggplot(Srbija, aes(Ukupan.broj, Stopa.novih.slucajeva)) +
+    geom_line(size = 1) +
+    geom_point(size = 2, col = "red") +
     theme_bw() + 
     scale_fill_brewer(palette = "Spectral") +
     labs(x = "Ukupan broj zaraženih", 
          y = "Stopa rasta pozitivnih slučajeva u odnosu na prethodan dan") +
     geom_hline(col = "red", yintercept = 1.1) + ylim(0, 1.5)
+
+stopa.rasta
+
 ```
 
 
-#### Promena broja pozitivnih slučajeva u odnosu na broj testiranih
+## Promena broja pozitivnih slučajeva u odnosu na broj testiranih
 
 ```{r, echo=FALSE, message=FALSE}
-ggplot(Srbija, aes(Broj.testiranih, Ukupan.broj)) +
-    geom_line(size = 1.5) +
+poz.testirani <- ggplot(Srbija, aes(Broj.testiranih, Ukupan.broj)) +
+    geom_smooth() +
+    geom_point(size = 2, col = "red") +
     theme_bw() + 
     scale_fill_brewer(palette = "Spectral") +
     labs(x = "Ukupan broj testiranih", 
          y = "Ukupan broj zaraženih")
+
+poz.testirani
+
 ```
 
 
-#### Promena broja testiranih slučajeva na dnevnom nivou
+## Promena broja testiranih slučajeva na dnevnom nivou
 
-```{r, echo=FALSE, message=FALSE}
-ggplot(Srbija, aes(Datum, Broj.testiranih.dnevno)) +
-    geom_line(size = 1.5) +
+```{r, echo=FALSE, message=FALSE, warning= FALSE}
+
+dnevni.test <- ggplot(Srbija, aes(Datum, Broj.testiranih.dnevno)) +
+    geom_line(size = 1) +
+    geom_point(size = 2, col = "red") +
     theme_bw() + 
-    scale_fill_brewer(palette = "Spectral") +
     labs(x = "Datum", 
          y = "Broj testiranih na dnevno")
+
+dnevni.test
+
 ```
 
 
-#### Odnos broja negativnih (crvena linija) broja pozitivnih slučajeva (zelena liniija)
+## Odnos broja negativnih (crvena linija) broja pozitivnih slučajeva (zelena liniija)
 
 ```{r, echo=FALSE, message=FALSE}
-ggplot(Srbija, aes(Datum)) +
+
+poz.neg <- ggplot(Srbija, aes(Datum)) +
     geom_line(aes(y = Negativni), size = 0.75, col = "red") +
-    geom_line(aes(y = Pozitivni.novi), col = "#009e73") +
+    geom_line(aes(y = Pozitivni.novi), size = 0.75, col = "#009e73") +
+    geom_point(aes(y = Negativni), size = 2, col = "red") +
+    geom_point(aes(y = Pozitivni.novi), size = 2, col = "#009e73") +
     theme_bw() +
     theme(legend.position = "none") +
     labs(x = "Datum", 
          y = "Testirani dnevno")
+poz.neg
+
 ```
 
 
-#### Procenat smrtnosti u zavisnosti od promene broja pozitivnih slučajeva
+## Procenat smrtnosti u zavisnosti od promene broja pozitivnih slučajeva
 
 ```{r, echo=FALSE, message=FALSE}
-ggplot(Srbija, aes(Ukupan.broj, Procenat.smrtnosti)) +
-    geom_line(size = 1.5) +
+
+rast.smrti <- ggplot(Srbija, aes(Ukupan.broj, Procenat.smrtnosti)) +
+    geom_line(size = 1) +
+    geom_point(size = 2, col = "red") +
     theme_bw() + 
     scale_fill_brewer(palette = "Spectral") +
     labs(x = "Ukupan broj zaraženih", 
          y = "Procenat smrtnih slučajeva")
+
+rast.smrti
+
+```
+
+## Starosna i polna struktura smrtnih slučajeva
+```{r, echo=FALSE, message=FALSE}
+smrt.srb <- read.csv("Smrtnost.starost.pol.csv", header = T)
+
+smrt.pol <- ggplot(smrt.srb, aes(x = Godine, y = Broj.ukupno, fill = Pol)) +
+    geom_col() +
+    theme_bw() + 
+    labs(x = "Starosna grupa", 
+         y = "Broj smrtnih slučajeva") +
+    scale_fill_manual(values = c("#56B4E9", "#E69F00"))
+
+smrt.pol
+
 ```
 
 
-### Broj povrđenih slučajeva u regionu
-######izvori: covid19.rs, worldometers.info, https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6
+# Broj povrđenih slučajeva u regionu
+izvori: covid19.rs, worldometers.info, https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6
 
 
 
 ```{r, echo=FALSE, message=FALSE}
 Region <- read.csv("Zemlje.regiona.csv", header = T)
-ggplot(Region, aes(Zemlja, Broj.na.1M.stanovnika, fill = Zemlja)) +
+balkan.rast <- ggplot(Region, aes(Zemlja, Broj.na.1M.stanovnika, fill = Zemlja)) +
     geom_bar(stat = "identity", 
              position = "dodge") +
     theme_bw() + 
@@ -135,92 +176,69 @@ ggplot(Region, aes(Zemlja, Broj.na.1M.stanovnika, fill = Zemlja)) +
     scale_fill_brewer(palette = "Spectral") +
     theme(axis.text.x=element_blank(),
          axis.ticks.x=element_blank())
+
+balkan.rast
+
 ```
 
-###Broj smrtnih slučajeva u regionu
+## Broj smrtnih slučajeva u regionu
 
 ```{r, echo=FALSE, message=FALSE}
-ggplot(Region, aes(Zemlja, Smrtni.slucajevi.na.1M, fill = Zemlja)) +
+balkan.smrt <- ggplot(Region, aes(Zemlja, Smrtni.slucajevi.na.1M, fill = Zemlja)) +
     geom_bar(stat = "identity", position = "dodge") +
     theme_bw() + 
     labs(x = "Zemlja", y = "Broj smrtnih slučajeva na milion stanovnika") + 
     scale_fill_brewer(palette = "Spectral") +
     theme(axis.text.x=element_blank(),
          axis.ticks.x=element_blank())
+
+balkan.smrt
+
 ```
 
 
-### Rast broja zaraženih u odnosu na trenutna žarišta u Evropi (do 4. Aprila 2020)
-#### Horizontalne linije predstavljaju momenat uvođenja restrikcija/vanrednog stanja
-######izvori: covid19.rs, worldometers.info, swissinfo.ch 
+## Rast broja zaraženih u odnosu na trenutna žarišta u Evropi (do 4. Aprila 2020)
+Krugovi predstavljaju momenat uvođenja restrikcija/vanrednog stanja u prikazanim zemljama
+izvori: covid19.rs, worldometers.info, swissinfo.ch 
 
 ```{r, echo=FALSE, message=FALSE}
 Zarista <- read.csv("Zarista.csv", header = T)
 Zarista$Datum <- as.Date(Zarista$Datum, format = "%d/%m/%Y")
-g<- ggplot(Zarista, aes(Datum, Broj)) +
-    geom_line(aes(colour = factor(Zemlja)), size = 1.5) +
-    theme_bw() + 
-    scale_fill_brewer(palette = "Spectral") + 
-    scale_color_manual(values = c("#d55e00", "#cc79a7","#0072b2", "#f0e442", "#009e73", "#000000"))
-g + geom_vline(xintercept = as.numeric(Zarista$Datum[12]), 
-                linetype="dotdash", alpha = 0.3, #italija
-                color = "#cc79a7", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[127]), 
-                linetype="dotdash", alpha = 0.3, #francuska
-                color = "#d55e00", size=1.5) + 
-    geom_vline(xintercept = as.numeric(Zarista$Datum[97]), 
-                linetype="dotdash", alpha = 0.3, #nemacka
-                color = "#0072b2", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[161]), 
-                linetype="dotdash", alpha = 0.8, #spanija
-                color = "#f0e442", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[52]), 
-                linetype="dotdash", alpha = 0.3, #svajcarska
-                color = "#000000", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[198]), 
-                linetype="dotdash", alpha = 0.3, #srbija
-                color = "#009e73", size=1.5) +
-    labs(x = "Datum", 
-        y = "Broj pozitivnih na milion stanovnika")
-   
-```
 
-#####Rast broja zaraženih u odnosu na trenutna žarišta u Evropi, log10 skala(do 4. Aprila 2020)
+```
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE}
 Zarista <- read.csv("Zarista.csv", header = T)
 Zarista$Datum <- as.Date(Zarista$Datum, format = "%d/%m/%Y")
-g<- ggplot(Zarista, aes(Datum, Broj)) +
+scenario<- ggplot(Zarista, aes(Datum, Broj)) +
     geom_line(aes(colour = factor(Zemlja)), size = 1.5) +
     theme_bw() + 
     scale_fill_brewer(palette = "Spectral") + 
-    scale_color_manual(values = c("#d55e00", "#cc79a7","#0072b2", "#f0e442", "#009e73", "#000000"))
-g + geom_vline(xintercept = as.numeric(Zarista$Datum[12]), 
-                linetype="dotdash", alpha = 0.3, #italija
-                color = "#cc79a7", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[127]), 
-                linetype="dotdash", alpha = 0.3, #francuska
-                color = "#d55e00", size=1.5) + 
-    geom_vline(xintercept = as.numeric(Zarista$Datum[97]), 
-                linetype="dotdash", alpha = 0.3, #nemacka
-                color = "#0072b2", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[161]), 
-                linetype="dotdash", alpha = 0.8, #spanija
-                color = "#f0e442", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[52]), 
-                linetype="dotdash", alpha = 0.3, #svajcarska
-                color = "#000000", size=1.5) +
-    geom_vline(xintercept = as.numeric(Zarista$Datum[198]), 
-                linetype="dotdash", alpha = 0.3, #srbija
-                color = "#009e73", size=1.5) +
+    scale_color_manual(values = c("#d55e00", "#cc79a7","#0072b2", "#f0e442", "#009e73", "#000000")) +
     scale_y_log10() +
     labs(x = "Datum", 
-        y = "log10 broja pozitivnih na milion stanovnika")
-   
-```
+         y = "log10 broja pozitivnih na milion stanovnika") + 
+    annotate(geom="text", x = as.Date("2020-03-15"), #Francuska
+                    y = 67, label = "O", col = "#d55e00", 
+                    fontface = "bold", size = 8) +
+    annotate(geom="text", x = as.Date("2020-03-09"), #Italija
+             y = 122, label = "O", col = "#cc79a7", 
+             fontface = "bold", size = 8) +
+    annotate(geom="text", x = as.Date("2020-03-16"), #Nemacka
+             y = 58, label = "O", col = "#0072b2", 
+             fontface = "bold", size = 8) +
+    annotate(geom="text", x = as.Date("2020-03-14"), #Spanija
+             y = 90, label = "O", col = "#f0e442", 
+             fontface = "bold", size = 8) +
+    annotate(geom="text", x = as.Date("2020-03-14"), #Srbija
+             y = 5, label = "O", col = "#009e73", 
+             fontface = "bold", size = 8) +
+    annotate(geom="text", x = as.Date("2020-03-13"), #Svajcarska
+             y = 100, label = "O", col = "#000000", 
+             fontface = "bold", size = 8)
 
-```{r}
 
-sessionInfo()
+
+scenario   
 
 ```
