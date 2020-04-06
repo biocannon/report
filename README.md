@@ -68,7 +68,7 @@ Broj smrtnih slučajeva u regionu
 
 ![](izvestaj_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
-Rast broja zaraženih u odnosu na trenutna žarišta u Evropi (do 4. Aprila 2020)
+Rast broja zaraženih u odnosu na trenutna žarišta u Evropi (do 5. Aprila 2020)
 ------------------------------------------------------------------------------
 
 Krugovi predstavljaju momenat uvođenja restrikcija/vanrednog stanja u
