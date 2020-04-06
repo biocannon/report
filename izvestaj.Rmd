@@ -3,8 +3,13 @@ title: "COVID-19: analiza situacije u Srbiji"
 
 output: 
     md_document:
-        variant: markdown_github
+        variant: markdown
     #html
+    #github_document:
+    #    html_preview: TRUE
+        
+    #pdf_document
+    
 date: "5/4/2020"
 ---
 
@@ -197,7 +202,7 @@ balkan.smrt
 ```
 
 
-## Rast broja zaraženih u odnosu na trenutna žarišta u Evropi (do 4. Aprila 2020)
+## Rast broja zaraženih u odnosu na trenutna žarišta u Evropi (do 5. Aprila 2020)
 Krugovi predstavljaju momenat uvođenja restrikcija/vanrednog stanja u prikazanim zemljama
 izvori: covid19.rs, worldometers.info, swissinfo.ch 
 
