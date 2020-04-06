@@ -3,7 +3,7 @@ title: "COVID-19: analiza situacije u Srbiji"
 
 output: 
     md_document:
-        variant: markdown
+        variant: markdown_github
     #html
     #github_document:
     #    html_preview: TRUE
